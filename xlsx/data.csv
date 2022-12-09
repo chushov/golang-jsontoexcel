@@ -1,4 +1,4 @@
-Icode,ParentID,Name,Active
+IDCode,ParentID,Name,Active
 60,57,"Опросы, сбор мнений",true
 30,26,Металлообработка,true
 113,0,"Фото, видео, печать",true
