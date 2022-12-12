@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-type SelfemployedActivities struct {
+type SelfEmployedActivities struct {
 	IDCode   int    `json:"id"`
 	ParentID int    `json:"parentId"`
 	Name     string `json:"name"`
@@ -21,9 +21,15 @@ func convertJSONToCSV(source, destination string) error {
 		return err
 	}
 
-	defer sourceFile.Close()
+	defer func(sourceFile *os.File) {
+		err := sourceFile.Close()
+		if err != nil {
+			fmt.Println("Something went wrong", err)
+			log.Fatal("Something went wrong", err)
+		}
+	}(sourceFile)
 
-	var Naming []SelfemployedActivities
+	var Naming []SelfEmployedActivities
 	if err := json.NewDecoder(sourceFile).Decode(&Naming); err != nil {
 		return err
 	}
@@ -32,7 +38,13 @@ func convertJSONToCSV(source, destination string) error {
 	if err != nil {
 		return err
 	}
-	defer outputFile.Close()
+	defer func(outputFile *os.File) {
+		err := outputFile.Close()
+		if err != nil {
+			fmt.Println("Cant save output file", err)
+			log.Fatal("Cant save output file", err)
+		}
+	}(outputFile)
 
 	writer := csv.NewWriter(outputFile)
 	defer writer.Flush()
@@ -53,7 +65,7 @@ func convertJSONToCSV(source, destination string) error {
 }
 
 func main() {
-	if err := convertJSONToCSV("json/activities_prod.json", "xlsx/data.csv"); err != nil {
+	if err := convertJSONToCSV("json/activities_prod.json", "xlsx/activities_prod.csv"); err != nil {
 		log.Fatal(err)
 	}
 }
