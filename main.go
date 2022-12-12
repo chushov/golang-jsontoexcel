@@ -8,14 +8,14 @@ import (
 	"os"
 )
 
-type SelfEmployedActivities struct {
+type activitiesStruct struct {
 	IDCode   int    `json:"id"`
 	ParentID int    `json:"parentId"`
 	Name     string `json:"name"`
 	Active   bool   `json:"active"`
 }
 
-func convertJSONToCSV(source, destination string) error {
+func convertToCSV(source, destination string) error {
 	sourceFile, err := os.Open(source)
 	if err != nil {
 		return err
@@ -29,7 +29,7 @@ func convertJSONToCSV(source, destination string) error {
 		}
 	}(sourceFile)
 
-	var Naming []SelfEmployedActivities
+	var Naming []activitiesStruct
 	if err := json.NewDecoder(sourceFile).Decode(&Naming); err != nil {
 		return err
 	}
@@ -65,7 +65,7 @@ func convertJSONToCSV(source, destination string) error {
 }
 
 func main() {
-	if err := convertJSONToCSV("json/activities_prod.json", "xlsx/activities_prod.csv"); err != nil {
+	if err := convertToCSV("json/activities_prod.json", "xlsx/activities_prod.csv"); err != nil {
 		log.Fatal(err)
 	}
 }
